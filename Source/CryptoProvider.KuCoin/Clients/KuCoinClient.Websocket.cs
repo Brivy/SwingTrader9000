@@ -3,6 +3,7 @@ using CryptoProvider.Contracts.Models;
 using CryptoProvider.KuCoin.Constants;
 using CryptoProvider.KuCoin.Enums;
 using CryptoProvider.KuCoin.Models;
+using System.Security.Cryptography;
 
 namespace CryptoProvider.KuCoin.Clients
 {
@@ -10,7 +11,7 @@ namespace CryptoProvider.KuCoin.Clients
     {
         public async Task<InitialWebSocketData> GetInitialWebSocketDataAsync(CancellationToken cancellationToken)
         {
-            var url = _cryptoProviderUrlService.ConstructUrl(ApiVersion.V1, Endpoints.BulletPublic);
+            var url = _cryptoProviderUrlService.ConstructUrl(ApiVersion.v1, Endpoints.BulletPublic);
             var response = await PostAsync(url, cancellationToken);
             return ConvertToInitialWebSocketData(response);
         }
@@ -24,9 +25,18 @@ namespace CryptoProvider.KuCoin.Clients
             {
                 Token = bulletPublic.Data.Token,
                 Endpoint = instanceServer.Endpoint,
+                ConnectId = CreateConnectId(),
                 PingInterval = instanceServer.PingInterval,
                 PingTimeout = instanceServer.PingTimeout
             };
+        }
+
+        private static string CreateConnectId()
+        {
+            var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var timeBytes = BitConverter.GetBytes(currentTime);
+            var hashBytes = MD5.HashData(timeBytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
         }
     }
 }

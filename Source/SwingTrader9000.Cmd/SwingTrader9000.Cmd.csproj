@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CryptoProvider.Contracts\CryptoProvider.Contracts.csproj" />
     <ProjectReference Include="..\CryptoProvider.KuCoin\CryptoProvider.KuCoin.csproj" />
+    <ProjectReference Include="..\SwingTrader9000.Business\SwingTrader9000.Business.csproj" />
   </ItemGroup>
 
   <ItemGroup>
