@@ -23,13 +23,11 @@ namespace SwingTrader9000.Cmd
                 })
                 .Build();
 
-            using (var serviceScope = host.Services.CreateScope())
-            {
-                var serviceProvider = serviceScope.ServiceProvider;
-                var cryptoClient = serviceProvider.GetRequiredService<ICryptoClient>();
-                var result = await cryptoClient.GetInitialWebSocketDataAsync(CancellationToken.None);
-                Console.WriteLine(result);
-            }
+            using var serviceScope = host.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+            var cryptoClient = serviceProvider.GetRequiredService<ICryptoClient>();
+            var result = await cryptoClient.GetInitialWebSocketDataAsync(CancellationToken.None);
+            Console.WriteLine(result);
 
             //using var client = new ClientWebSocket();
             //await client.ConnectAsync(new Uri("ws://your-websocket-server-url"), CancellationToken.None);

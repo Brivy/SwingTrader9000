@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34004.107
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwingTrader9000.Cmd", "SwingTrader9000.Cmd\SwingTrader9000.Cmd.csproj", "{CF58AF83-C147-4A99-880F-33EC36515FFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwingTrader9000.Cmd", "Source\SwingTrader9000.Cmd\SwingTrader9000.Cmd.csproj", "{CF58AF83-C147-4A99-880F-33EC36515FFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoProvider.KuCoin", "CryptoProvider.KuCoin\CryptoProvider.KuCoin.csproj", "{2CD4BE48-A4F0-4C51-ADC8-0429011BC441}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoProvider.KuCoin", "Source\CryptoProvider.KuCoin\CryptoProvider.KuCoin.csproj", "{2CD4BE48-A4F0-4C51-ADC8-0429011BC441}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoProvider.Contracts", "CryptoProvider.Contracts\CryptoProvider.Contracts.csproj", "{3F7AE411-7299-4D79-AD0E-E72DBC49C4B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoProvider.Contracts", "Source\CryptoProvider.Contracts\CryptoProvider.Contracts.csproj", "{3F7AE411-7299-4D79-AD0E-E72DBC49C4B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyInjection.Common", "DependencyInjection.Common\DependencyInjection.Common.csproj", "{1FA4DF5D-51C8-4DF2-B925-4D0D77B87DEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyInjection.Common", "Source\DependencyInjection.Common\DependencyInjection.Common.csproj", "{1FA4DF5D-51C8-4DF2-B925-4D0D77B87DEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{FC99F6B3-DE49-4554-87A6-2E56C136793C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{DFEC9059-0065-4172-82B8-528F7451FD3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{DB92DDA4-6589-4026-A08D-A9975ED919C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +42,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF58AF83-C147-4A99-880F-33EC36515FFF} = {DB92DDA4-6589-4026-A08D-A9975ED919C2}
+		{2CD4BE48-A4F0-4C51-ADC8-0429011BC441} = {FC99F6B3-DE49-4554-87A6-2E56C136793C}
+		{3F7AE411-7299-4D79-AD0E-E72DBC49C4B4} = {FC99F6B3-DE49-4554-87A6-2E56C136793C}
+		{1FA4DF5D-51C8-4DF2-B925-4D0D77B87DEF} = {DFEC9059-0065-4172-82B8-528F7451FD3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DDF18FDB-CA55-4D74-94D4-74BD3CBCD410}
