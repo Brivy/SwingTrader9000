@@ -1,7 +1,6 @@
 ﻿using CryptoProvider.Contracts.Clients;
 using CryptoProvider.Contracts.Exceptions;
 using CryptoProvider.KuCoin.Exceptions;
-using CryptoProvider.KuCoin.Models;
 using CryptoProvider.KuCoin.Services;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -21,13 +20,13 @@ namespace CryptoProvider.KuCoin.Clients
             _cryptoProviderUrlService = cryptoProviderUrlService;
         }
 
-        public async Task<BulletPublic> PostAsync(string url, CancellationToken cancellationToken)
+        private async Task<TResponse> SendAsync<TResponse>(HttpMethod httpMethod, string url, CancellationToken cancellationToken = default)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                var request = new HttpRequestMessage(httpMethod, url);
                 var response = await _httpClient.SendAsync(request, cancellationToken);
-                return await response.Content.ReadFromJsonAsync<BulletPublic>(cancellationToken: cancellationToken) ?? throw new KuCoinInvalidResponseException("The HTTP content is empty or null");
+                return await response.Content.ReadFromJsonAsync<TResponse>(cancellationToken: cancellationToken) ?? throw new KuCoinInvalidResponseException("The HTTP content is empty or null");
             }
             catch (KuCoinInvalidResponseException ex)
             {

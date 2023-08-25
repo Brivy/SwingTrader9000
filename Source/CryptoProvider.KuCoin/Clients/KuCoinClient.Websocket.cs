@@ -12,11 +12,11 @@ namespace CryptoProvider.KuCoin.Clients
         public async Task<InitialWebSocketData> GetInitialWebSocketDataAsync(CancellationToken cancellationToken)
         {
             var url = _cryptoProviderUrlService.ConstructUrl(ApiVersion.v1, Endpoints.BulletPublic);
-            var response = await PostAsync(url, cancellationToken);
+            var response = await SendAsync<BulletPublicResponse>(HttpMethod.Post, url, cancellationToken);
             return ConvertToInitialWebSocketData(response);
         }
 
-        private static InitialWebSocketData ConvertToInitialWebSocketData(BulletPublic bulletPublic)
+        private static InitialWebSocketData ConvertToInitialWebSocketData(BulletPublicResponse bulletPublic)
         {
             if (bulletPublic.Data is null || bulletPublic.Data.InstanceServers?.Any() is not true) throw new CryptoProviderRequestException("The received response was invalid");
             var instanceServer = bulletPublic.Data.InstanceServers[0];

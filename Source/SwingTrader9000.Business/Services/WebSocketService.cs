@@ -30,12 +30,15 @@ namespace SwingTrader9000.Business.Services
 
         public async Task Initialize(CancellationToken cancellationToken = default)
         {
-            var webSocketData = await _cryptoClient.GetInitialWebSocketDataAsync(cancellationToken);
-            var webSocketUri = CreateWebSocketUri(webSocketData.Endpoint, webSocketData.Token, webSocketData.ConnectId);
+            //var webSocketData = await _cryptoClient.GetInitialWebSocketDataAsync(cancellationToken);
+            //var webSocketUri = CreateWebSocketUri(webSocketData.Endpoint, webSocketData.Token, webSocketData.ConnectId);
 
-            using var client = new ClientWebSocket();
-            await client.ConnectAsync(webSocketUri, cancellationToken);
-            await Task.WhenAll(ReceiveAsync(client), SendAsync(client));
+            //using var client = new ClientWebSocket();
+            //await client.ConnectAsync(webSocketUri, cancellationToken);
+            //await Task.WhenAll(ReceiveAsync(client), SendAsync(client));
+
+            var response = await _cryptoClient.GetTickerAsync(Symbol.BTCUSDT, cancellationToken);
+            _logger.LogInformation("Current price: {currentPrice}", response.Price);
         }
 
         private async Task SendAsync(ClientWebSocket client)

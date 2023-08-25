@@ -2,23 +2,23 @@
 
 namespace CryptoProvider.KuCoin.Models
 {
-    public record BulletPublic
+    public record BulletPublicResponse
     {
         [JsonPropertyName("code")]
         public string Code { get; init; } = null!;
         [JsonPropertyName("data")]
-        public BulletPublicData Data { get; init; } = null!;
+        public BulletPublicResponseData Data { get; init; } = null!;
     }
 
-    public record BulletPublicData
+    public record BulletPublicResponseData
     {
         [JsonPropertyName("token")]
         public string Token { get; init; } = null!;
         [JsonPropertyName("instanceServers")]
-        public IReadOnlyList<BulletPublicInstanceServers> InstanceServers { get; init; } = new List<BulletPublicInstanceServers>();
+        public IReadOnlyList<BulletPublicResponseInstanceServers> InstanceServers { get; init; } = new List<BulletPublicResponseInstanceServers>();
     }
 
-    public record BulletPublicInstanceServers
+    public record BulletPublicResponseInstanceServers
     {
         [JsonPropertyName("endpoint")]
         public string Endpoint { get; init; } = null!;
