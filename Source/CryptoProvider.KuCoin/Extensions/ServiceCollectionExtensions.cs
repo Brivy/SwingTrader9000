@@ -21,7 +21,9 @@ namespace CryptoProvider.KuCoin.Extensions
                 client.BaseAddress = new Uri(settings.BaseUrl);
             });
 
-            services.AddScoped<IKuCoinClientUrlService, KuCoinClientUrlService>();
+            services
+                .AddScoped<IKuCoinRequestService, KuCoinRequestService>()
+                .AddScoped<IKuCoinClientUrlService, KuCoinClientUrlService>();
         }
     }
 }

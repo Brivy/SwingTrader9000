@@ -11,8 +11,9 @@ namespace CryptoProvider.KuCoin.Clients
         public async Task<CurrentPrice> GetTickerAsync(string ticker, CancellationToken cancellationToken = default)
         {
             var queryParams = new Dictionary<string, string> { { "symbol", ticker } };
-            var url = _cryptoProviderUrlService.ConstructUrl(ApiVersion.v1, Endpoints.MarketTicker, queryParams);
-            var response = await SendAsync<TickerResponse>(HttpMethod.Get, url, cancellationToken);
+            var url = _kuCoinUrlService.ConstructUrl(ApiVersion.v1, PublicEndpoint.MarketTicker, queryParams);
+            var request = _kuCoinRequestService.CreatePublicRequest(HttpMethod.Get, url);
+            var response = await SendPublicAsync<TickerResponse>(request, cancellationToken);
             return ConvertToTickerData(response);
         }
 

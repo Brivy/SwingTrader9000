@@ -1,30 +1,32 @@
-﻿using CryptoProvider.Contracts.Clients;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
+using CryptoProvider.Contracts.Clients;
 using CryptoProvider.Contracts.Exceptions;
 using CryptoProvider.KuCoin.Exceptions;
 using CryptoProvider.KuCoin.Services;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace CryptoProvider.KuCoin.Clients
 {
     public partial class KuCoinClient : ICryptoClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IKuCoinClientUrlService _cryptoProviderUrlService;
+        private readonly IKuCoinClientUrlService _kuCoinUrlService;
+        private readonly IKuCoinRequestService _kuCoinRequestService;
 
         public KuCoinClient(
             HttpClient httpClient,
-            IKuCoinClientUrlService cryptoProviderUrlService)
+            IKuCoinClientUrlService kuCoinUrlService,
+            IKuCoinRequestService kuCoinRequestService)
         {
             _httpClient = httpClient;
-            _cryptoProviderUrlService = cryptoProviderUrlService;
+            _kuCoinUrlService = kuCoinUrlService;
+            _kuCoinRequestService = kuCoinRequestService;
         }
 
-        private async Task<TResponse> SendAsync<TResponse>(HttpMethod httpMethod, string url, CancellationToken cancellationToken = default)
+        private async Task<TResponse> SendPublicAsync<TResponse>(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             try
             {
-                var request = new HttpRequestMessage(httpMethod, url);
                 var response = await _httpClient.SendAsync(request, cancellationToken);
                 return await response.Content.ReadFromJsonAsync<TResponse>(cancellationToken: cancellationToken) ?? throw new KuCoinInvalidResponseException("The HTTP content is empty or null");
             }

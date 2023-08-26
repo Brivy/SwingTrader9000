@@ -1,11 +1,11 @@
-﻿using CryptoProvider.Contracts.Clients;
+﻿using System.Net.WebSockets;
+using System.Text;
+using System.Web;
+using CryptoProvider.Contracts.Clients;
 using Microsoft.Extensions.Logging;
 using SwingTrader9000.Business.Constants;
 using SwingTrader9000.Business.Queues;
 using SwingTrader9000.Contracts.Services;
-using System.Net.WebSockets;
-using System.Text;
-using System.Web;
 
 namespace SwingTrader9000.Business.Services
 {
@@ -37,8 +37,11 @@ namespace SwingTrader9000.Business.Services
             //await client.ConnectAsync(webSocketUri, cancellationToken);
             //await Task.WhenAll(ReceiveAsync(client), SendAsync(client));
 
-            var response = await _cryptoClient.GetTickerAsync(Symbol.BTCUSDT, cancellationToken);
-            _logger.LogInformation("Current price: {currentPrice}", response.Price);
+            //var response = await _cryptoClient.GetTickerAsync(Symbol.BTCUSDT, cancellationToken);
+            //_logger.LogInformation("Current price: {currentPrice}", response.Price);
+
+            var response = await _cryptoClient.GetAccountsAsync(cancellationToken);
+            _logger.LogInformation("Current accounts: {balances}", response);
         }
 
         private async Task SendAsync(ClientWebSocket client)
