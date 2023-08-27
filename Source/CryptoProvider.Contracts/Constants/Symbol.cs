@@ -1,4 +1,4 @@
-﻿namespace SwingTrader9000.Business.Constants
+﻿namespace CryptoProvider.Contracts.Constants
 {
     public static class Symbol
     {

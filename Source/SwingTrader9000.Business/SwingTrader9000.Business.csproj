@@ -16,4 +16,9 @@
     <ProjectReference Include="..\SwingTrader9000.Contracts\SwingTrader9000.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Constants\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

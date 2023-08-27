@@ -1,6 +1,6 @@
-﻿namespace SwingTrader9000.Contracts.Models
+﻿namespace CryptoProvider.KuCoin.Models.WebSocket
 {
-    public record SymbolTickerSubscriptionMessage
+    public record WebSocketSubscriptionMessage
     {
         public string Id { get; init; } = null!;
         public string Type { get; init; } = null!;

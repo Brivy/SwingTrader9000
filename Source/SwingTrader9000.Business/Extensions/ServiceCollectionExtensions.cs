@@ -11,7 +11,6 @@ namespace SwingTrader9000.Business.Extensions
         {
             services
                 .AddScoped<IProcessWebSocketMessageService, ProcessWebSocketMessageService>()
-                .AddScoped<ISubscriptionMessageService, SubscriptionMessageService>()
                 .AddScoped<IWebSocketService, WebSocketService>();
         }
     }

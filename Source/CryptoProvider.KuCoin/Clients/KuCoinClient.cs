@@ -1,29 +1,20 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using CryptoProvider.Contracts.Clients;
 using CryptoProvider.Contracts.Exceptions;
 using CryptoProvider.KuCoin.Exceptions;
-using CryptoProvider.KuCoin.Interfaces;
 
 namespace CryptoProvider.KuCoin.Clients
 {
-    public partial class KuCoinClient : ICryptoClient
+    public abstract class KuCoinClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IKuCoinClientUrlService _kuCoinUrlService;
-        private readonly IKuCoinRequestService _kuCoinRequestService;
 
-        public KuCoinClient(
-            HttpClient httpClient,
-            IKuCoinClientUrlService kuCoinUrlService,
-            IKuCoinRequestService kuCoinRequestService)
+        protected KuCoinClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _kuCoinUrlService = kuCoinUrlService;
-            _kuCoinRequestService = kuCoinRequestService;
         }
 
-        private async Task<TResponse> SendAsync<TResponse>(HttpRequestMessage request, CancellationToken cancellationToken = default)
+        protected async Task<TResponse> SendAsync<TResponse>(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             try
             {

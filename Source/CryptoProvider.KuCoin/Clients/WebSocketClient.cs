@@ -1,25 +1,30 @@
 ﻿using System.Security.Cryptography;
+using CryptoProvider.Contracts.Clients;
 using CryptoProvider.Contracts.Exceptions;
 using CryptoProvider.Contracts.Models.Api;
 using CryptoProvider.KuCoin.Constants;
 using CryptoProvider.KuCoin.Enums;
+using CryptoProvider.KuCoin.Interfaces;
 using CryptoProvider.KuCoin.Models.Api;
 
 namespace CryptoProvider.KuCoin.Clients
 {
-    public partial class KuCoinClient
+    public class WebSocketClient : KuCoinClient, IWebSocketClient
     {
-        public async Task<InitialWebSocketData> GetPublicWebSocketDataAsync(CancellationToken cancellationToken = default)
+        private readonly IKuCoinClientUrlService _kuCoinClientUrlService;
+        private readonly IKuCoinRequestService _kuCoinRequestService;
+
+        public WebSocketClient(HttpClient httpClient,
+            IKuCoinClientUrlService kuCoinClientUrlService,
+            IKuCoinRequestService kuCoinRequestService) : base(httpClient)
         {
-            var url = _kuCoinUrlService.ConstructUrl(ApiVersion.v1, PublicEndpoint.BulletPublic);
-            var request = _kuCoinRequestService.CreatePublicRequest(HttpMethod.Post, url);
-            var response = await SendAsync<BulletPublicResponse>(request, cancellationToken);
-            return ConvertToInitialWebSocketData(response);
+            _kuCoinClientUrlService = kuCoinClientUrlService;
+            _kuCoinRequestService = kuCoinRequestService;
         }
 
         public async Task<InitialWebSocketData> GetPrivateWebSocketDataAsync(CancellationToken cancellationToken = default)
         {
-            var url = _kuCoinUrlService.ConstructUrl(ApiVersion.v1, PublicEndpoint.BulletPrivate);
+            var url = _kuCoinClientUrlService.ConstructUrl(ApiVersion.v1, Endpoint.Private.BulletPrivate);
             var request = _kuCoinRequestService.CreatePrivateRequest(HttpMethod.Post, url);
             var response = await SendAsync<BulletPublicResponse>(request, cancellationToken);
             return ConvertToInitialWebSocketData(response);
