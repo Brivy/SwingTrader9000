@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace SwingTrader9000.Business.Queues
+namespace CryptoProvider.KuCoin.Queues
 {
     public class ConcurrentMessageQueue
     {

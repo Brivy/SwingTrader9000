@@ -1,5 +1,8 @@
 ﻿using CryptoProvider.Contracts.Clients;
+using CryptoProvider.Contracts.Services;
 using CryptoProvider.KuCoin.Clients;
+using CryptoProvider.KuCoin.Interfaces;
+using CryptoProvider.KuCoin.Queues;
 using CryptoProvider.KuCoin.Services;
 using CryptoProvider.KuCoin.Settings;
 using DependencyInjection.Common.Extensions;
@@ -21,7 +24,9 @@ namespace CryptoProvider.KuCoin.Extensions
                 client.BaseAddress = new Uri(settings.BaseUrl);
             });
 
+            services.AddSingleton<ConcurrentMessageQueue>();
             services
+                .AddScoped<IKuCoinWebSocketService, KuCoinWebSocketService>()
                 .AddScoped<IKuCoinRequestService, KuCoinRequestService>()
                 .AddScoped<IKuCoinClientUrlService, KuCoinClientUrlService>();
         }

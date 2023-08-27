@@ -1,133 +1,58 @@
-﻿using System.Net.WebSockets;
-using System.Text;
-using System.Web;
-using CryptoProvider.Contracts.Clients;
+﻿using CryptoProvider.Contracts.Interfaces;
+using CryptoProvider.Contracts.Models.WebSocket;
+using CryptoProvider.Contracts.Services;
 using Microsoft.Extensions.Logging;
-using SwingTrader9000.Business.Constants;
-using SwingTrader9000.Business.Queues;
 using SwingTrader9000.Contracts.Services;
 
 namespace SwingTrader9000.Business.Services
 {
     public class WebSocketService : IWebSocketService
     {
-        private readonly ICryptoClient _cryptoClient;
-        private readonly IProcessMessageService _processMessageService;
-        private readonly ConcurrentMessageQueue _concurrentMessageQueue;
+        private readonly IKuCoinWebSocketService _kuCoinWebSocketService;
+        private readonly IProcessWebSocketMessageService _processWebSocketMessageService;
         private readonly ILogger<WebSocketService> _logger;
 
         public WebSocketService(
-            ICryptoClient cryptoClient,
-            IProcessMessageService processMessageService,
-            ConcurrentMessageQueue concurrentMessageQueue,
+            IKuCoinWebSocketService kuCoinWebSocketService,
+            IProcessWebSocketMessageService processWebSocketMessageService,
             ILogger<WebSocketService> logger)
         {
-            _cryptoClient = cryptoClient;
-            _processMessageService = processMessageService;
-            _concurrentMessageQueue = concurrentMessageQueue;
+            _kuCoinWebSocketService = kuCoinWebSocketService;
+            _processWebSocketMessageService = processWebSocketMessageService;
             _logger = logger;
         }
 
-        public async Task Initialize(CancellationToken cancellationToken = default)
+        public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
-            //var webSocketData = await _cryptoClient.GetInitialWebSocketDataAsync(cancellationToken);
-            //var webSocketUri = CreateWebSocketUri(webSocketData.Endpoint, webSocketData.Token, webSocketData.ConnectId);
-
-            //using var client = new ClientWebSocket();
-            //await client.ConnectAsync(webSocketUri, cancellationToken);
-            //await Task.WhenAll(ReceiveAsync(client), SendAsync(client));
-
-            //var response = await _cryptoClient.GetTickerAsync(Symbol.BTCUSDT, cancellationToken);
-            //_logger.LogInformation("Current price: {currentPrice}", response.Price);
-
-            var response = await _cryptoClient.GetAccountsAsync(cancellationToken);
-            _logger.LogInformation("Current accounts: {balances}", response);
+            await _kuCoinWebSocketService.InitializeAsync(OnMessageReceived, OnMessageReceivedAsync, cancellationToken);
         }
 
-        private async Task SendAsync(ClientWebSocket client)
+        private bool OnMessageReceived(IWebSocketMessage webSocketMessage)
         {
-            while (client.State == WebSocketState.Open)
+            switch (webSocketMessage)
             {
-                _concurrentMessageQueue.MessageAvailable.WaitOne();
-                if (_concurrentMessageQueue.MessageQueue.TryDequeue(out var message))
-                {
-                    var buffer = Encoding.UTF8.GetBytes(message);
-                    await client.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
-                }
-            }
-        }
-
-        private async Task ReceiveAsync(ClientWebSocket client)
-        {
-            var buffer = new byte[1024 * 4];
-
-            while (client.State == WebSocketState.Open)
-            {
-                var result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Text)
-                {
-                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    ProcessMessageType(message);
-                }
-                else if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    _logger.LogWarning("Connection closed.");
-                    break;
-                }
-            }
-        }
-
-        private void ProcessMessageType(string message)
-        {
-            switch (message)
-            {
-                case var m when
-                    m.Contains(MessageType.Ping) ||
-                    m.Contains(MessageType.Pong) ||
-                    m.Contains(MessageType.Ack) ||
-                    m.Contains(MessageType.Subscribe) ||
-                    m.Contains(MessageType.Unsubscribe):
-                    _logger.LogInformation("{message}", m);
-                    break;
-                case var m when m.Contains(MessageType.Welcome):
-                    _processMessageService.ProcessWelcomeMessage();
-                    break;
-                case var m when m.Contains(MessageType.Message):
-                    ProcessMessageTopic(m);
-                    break;
+                case BasicMessage basicMessage:
+                    _logger.LogInformation("Received message: {type}", basicMessage.Type);
+                    return true;
+                case WelcomeMessage welcomeMessage:
+                    _logger.LogInformation("Received welcome message of type: {type}", welcomeMessage.Type);
+                    _processWebSocketMessageService.ProcessWelcomeMessage();
+                    return true;
                 default:
-                    _logger.LogWarning("Unknown message received: {message}", message);
-                    break;
+                    return false;
             }
         }
 
-        private void ProcessMessageTopic(string message)
+        private Task<bool> OnMessageReceivedAsync(IWebSocketMessage webSocketMessage, CancellationToken cancellationToken)
         {
-            switch (message)
+            switch (webSocketMessage)
             {
-                case var m when m.Contains(Topic.Ticker):
-                    _processMessageService.ProcessSymbolTickerMessage(m);
-                    break;
-                case var m when m.Contains(Topic.Snapshot):
-                    _logger.LogInformation("Balance received.");
-                    break;
+                case CurrentPrice currentPrice:
+                    _logger.LogInformation("Received current price: {price}", currentPrice.Price);
+                    return Task.FromResult(true);
                 default:
-                    _logger.LogWarning("Unknown topic received: {message}", message);
-                    break;
+                    return Task.FromResult(false);
             }
-        }
-
-        private static Uri CreateWebSocketUri(string endpoint, string token, string connectId)
-        {
-            var uri = new Uri(endpoint);
-
-            var uriBuilder = new UriBuilder(uri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query["token"] = token;
-            query["connectId"] = connectId;
-            uriBuilder.Query = query.ToString();
-
-            return uriBuilder.Uri;
         }
     }
 }

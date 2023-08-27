@@ -3,7 +3,7 @@ using System.Text.Json;
 using CryptoProvider.Contracts.Clients;
 using CryptoProvider.Contracts.Exceptions;
 using CryptoProvider.KuCoin.Exceptions;
-using CryptoProvider.KuCoin.Services;
+using CryptoProvider.KuCoin.Interfaces;
 
 namespace CryptoProvider.KuCoin.Clients
 {
@@ -23,7 +23,7 @@ namespace CryptoProvider.KuCoin.Clients
             _kuCoinRequestService = kuCoinRequestService;
         }
 
-        private async Task<TResponse> SendPublicAsync<TResponse>(HttpRequestMessage request, CancellationToken cancellationToken = default)
+        private async Task<TResponse> SendAsync<TResponse>(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             try
             {
