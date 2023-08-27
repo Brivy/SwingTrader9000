@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CryptoProvider.KuCoin.Models
+namespace CryptoProvider.KuCoin.Models.Api
 {
     public record BulletPublicResponse
     {

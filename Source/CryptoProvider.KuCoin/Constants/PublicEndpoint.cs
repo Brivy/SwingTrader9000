@@ -1,6 +1,6 @@
 ﻿namespace CryptoProvider.KuCoin.Constants
 {
-    public static class Endpoints
+    public static class PublicEndpoint
     {
         public const string BulletPublic = "bullet-public";
         public const string BulletPrivate = "bullet-private";

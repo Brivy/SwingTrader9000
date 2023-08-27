@@ -2,6 +2,6 @@
 {
     public interface IWebSocketService
     {
-        Task Initialize(CancellationToken cancellationToken = default);
+        Task InitializeAsync(CancellationToken cancellationToken = default);
     }
 }

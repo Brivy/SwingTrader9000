@@ -28,7 +28,7 @@ namespace SwingTrader9000.Cmd
             using var serviceScope = host.Services.CreateScope();
             var serviceProvider = serviceScope.ServiceProvider;
             var webSocketService = serviceProvider.GetRequiredService<IWebSocketService>();
-            await webSocketService.Initialize(CancellationToken.None);
+            await webSocketService.InitializeAsync(CancellationToken.None);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SwingTrader9000.Contracts.Models
+namespace CryptoProvider.KuCoin.Models.WebSocket
 {
     public record SymbolTickerMessage
     {
