@@ -1,4 +1,4 @@
-﻿namespace CryptoProvider.KuCoin.Services
+﻿namespace CryptoProvider.KuCoin.Interfaces
 {
     public interface IKuCoinRequestService
     {

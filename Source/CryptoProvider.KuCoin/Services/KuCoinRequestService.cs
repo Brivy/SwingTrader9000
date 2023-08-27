@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using CryptoProvider.KuCoin.Interfaces;
 using CryptoProvider.KuCoin.Settings;
 using Microsoft.Extensions.Options;
 

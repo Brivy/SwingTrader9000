@@ -1,5 +1,6 @@
-﻿using CryptoProvider.KuCoin.Enums;
-using System.Web;
+﻿using System.Web;
+using CryptoProvider.KuCoin.Enums;
+using CryptoProvider.KuCoin.Interfaces;
 
 namespace CryptoProvider.KuCoin.Services
 {

@@ -1,4 +1,4 @@
-﻿namespace CryptoProvider.Contracts.Models
+﻿namespace CryptoProvider.Contracts.Models.Api
 {
     public record CurrentPrice
     {

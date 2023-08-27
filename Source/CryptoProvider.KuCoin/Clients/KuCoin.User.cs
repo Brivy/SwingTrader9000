@@ -1,8 +1,8 @@
 ﻿using CryptoProvider.Contracts.Exceptions;
-using CryptoProvider.Contracts.Models;
+using CryptoProvider.Contracts.Models.Api;
 using CryptoProvider.KuCoin.Constants;
 using CryptoProvider.KuCoin.Enums;
-using CryptoProvider.KuCoin.Models;
+using CryptoProvider.KuCoin.Models.Api;
 
 namespace CryptoProvider.KuCoin.Clients
 {
@@ -12,7 +12,7 @@ namespace CryptoProvider.KuCoin.Clients
         {
             var url = _kuCoinUrlService.ConstructUrl(ApiVersion.v1, PrivateEndpoint.Accounts);
             var request = _kuCoinRequestService.CreatePrivateRequest(HttpMethod.Get, url);
-            var response = await SendPublicAsync<AccountsResponse>(request, cancellationToken);
+            var response = await SendAsync<AccountsResponse>(request, cancellationToken);
             return ConvertToTickerData(response);
         }
 

@@ -1,19 +1,27 @@
 ﻿using System.Security.Cryptography;
 using CryptoProvider.Contracts.Exceptions;
-using CryptoProvider.Contracts.Models;
+using CryptoProvider.Contracts.Models.Api;
 using CryptoProvider.KuCoin.Constants;
 using CryptoProvider.KuCoin.Enums;
-using CryptoProvider.KuCoin.Models;
+using CryptoProvider.KuCoin.Models.Api;
 
 namespace CryptoProvider.KuCoin.Clients
 {
     public partial class KuCoinClient
     {
-        public async Task<InitialWebSocketData> GetInitialWebSocketDataAsync(CancellationToken cancellationToken = default)
+        public async Task<InitialWebSocketData> GetPublicWebSocketDataAsync(CancellationToken cancellationToken = default)
         {
             var url = _kuCoinUrlService.ConstructUrl(ApiVersion.v1, PublicEndpoint.BulletPublic);
             var request = _kuCoinRequestService.CreatePublicRequest(HttpMethod.Post, url);
-            var response = await SendPublicAsync<BulletPublicResponse>(request, cancellationToken);
+            var response = await SendAsync<BulletPublicResponse>(request, cancellationToken);
+            return ConvertToInitialWebSocketData(response);
+        }
+
+        public async Task<InitialWebSocketData> GetPrivateWebSocketDataAsync(CancellationToken cancellationToken = default)
+        {
+            var url = _kuCoinUrlService.ConstructUrl(ApiVersion.v1, PublicEndpoint.BulletPrivate);
+            var request = _kuCoinRequestService.CreatePrivateRequest(HttpMethod.Post, url);
+            var response = await SendAsync<BulletPublicResponse>(request, cancellationToken);
             return ConvertToInitialWebSocketData(response);
         }
 

@@ -1,6 +1,6 @@
 ﻿using CryptoProvider.KuCoin.Enums;
 
-namespace CryptoProvider.KuCoin.Services
+namespace CryptoProvider.KuCoin.Interfaces
 {
     public interface IKuCoinClientUrlService
     {
