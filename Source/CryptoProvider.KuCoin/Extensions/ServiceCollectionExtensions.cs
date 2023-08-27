@@ -24,6 +24,7 @@ namespace CryptoProvider.KuCoin.Extensions
             services.AddHttpClient<IMarketClient, MarketClient>(client => SetupHttpClients(client, settings));
             services.AddHttpClient<IUserClient, UserClient>(client => SetupHttpClients(client, settings));
             services.AddHttpClient<IWebSocketClient, WebSocketClient>(client => SetupHttpClients(client, settings));
+            services.AddHttpClient<IOrderClient, OrderClient>(client => SetupHttpClients(client, settings));
 
             services.AddSingleton<ConcurrentMessageQueue>();
 

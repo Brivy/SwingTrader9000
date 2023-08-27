@@ -10,6 +10,7 @@ namespace SwingTrader9000.Business.Extensions
         public static void ConfigureSwingTrader9000Services(this IServiceCollection services, IConfiguration configuration)
         {
             services
+                .AddScoped<ITradeService, TradeService>()
                 .AddScoped<IProcessWebSocketMessageService, ProcessWebSocketMessageService>()
                 .AddScoped<IWebSocketService, WebSocketService>();
         }

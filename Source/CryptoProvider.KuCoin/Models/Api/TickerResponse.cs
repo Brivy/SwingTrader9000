@@ -6,8 +6,10 @@ namespace CryptoProvider.KuCoin.Models.Api
     {
         [JsonPropertyName("code")]
         public string Code { get; init; } = null!;
+        [JsonPropertyName("msg")]
+        public string? Msg { get; init; }
         [JsonPropertyName("data")]
-        public TickerResponseData Data { get; init; } = null!;
+        public TickerResponseData? Data { get; init; } = null!;
     }
 
     public record TickerResponseData

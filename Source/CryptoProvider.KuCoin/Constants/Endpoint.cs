@@ -11,6 +11,7 @@
         {
             public const string Accounts = "accounts";
             public const string BulletPrivate = "bullet-private";
+            public const string Orders = "orders";
         }
     }
 }

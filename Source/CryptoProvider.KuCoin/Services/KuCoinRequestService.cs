@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using CryptoProvider.KuCoin.Interfaces;
 using CryptoProvider.KuCoin.Settings;
 using Microsoft.Extensions.Options;
@@ -22,13 +24,25 @@ namespace CryptoProvider.KuCoin.Services
 
         public HttpRequestMessage CreatePrivateRequest(HttpMethod httpMethod, string url)
         {
+            return CreatePrivateRequest(httpMethod, new Dictionary<string, string>(), url);
+        }
+
+        public HttpRequestMessage CreatePrivateRequest<TRequestBody>(HttpMethod httpMethod, TRequestBody requestBody, string url)
+        {
             var request = new HttpRequestMessage(httpMethod, url);
+            var jsonContent = CreateRequestBody(requestBody);
             var requestPath = request.RequestUri?.OriginalString;
             var method = httpMethod.Method.ToUpper();
             var timestamp = GetCurrentUnixTimestampMillis();
-            var preHashString = $"{timestamp}{method}/{requestPath}";
+            var preHashString = $"{timestamp}{method}/{requestPath}{jsonContent}";
             var signature = ComputeSignature(preHashString, _options.ApiSecret);
             var passphrase = ComputeSignature(_options.Passphrase, _options.ApiSecret);
+
+            if (!string.IsNullOrWhiteSpace(jsonContent))
+            {
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                request.Content = content;
+            }
 
             request.Headers.Add("KC-API-KEY", _options.ApiKey);
             request.Headers.Add("KC-API-SIGN", signature);
@@ -37,6 +51,12 @@ namespace CryptoProvider.KuCoin.Services
             request.Headers.Add("KC-API-TIMESTAMP", timestamp);
 
             return request;
+        }
+
+        private static string CreateRequestBody<TRequestBody>(TRequestBody requestBody)
+        {
+            var serializeOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+            return JsonSerializer.Serialize(requestBody, serializeOptions);
         }
 
         private static string GetCurrentUnixTimestampMillis()
